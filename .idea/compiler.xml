@@ -12,5 +12,8 @@
         <module name="SwarmIntelligenceNeo4jPlugin" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="SwarmIntelligenceNeo4jPlugin" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

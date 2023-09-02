@@ -49,8 +49,9 @@ public class TestTruthGenerator {
     public void generateTruth() {
         try (var session = driver.session()) {
             var r = session.run("""
-                    MATCH (a)
-                    RETURN (a)
+                    
+                    CALL swarmintelligence.generateTruth() YIELD out
+                    return out
                                         
                     """);
             var results = r.list();
