@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import com.fasterxml.jackson.annotation.JacksonInject;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -12,6 +13,7 @@ import org.neo4j.procedure.Context;
 import org.neo4j.procedure.Description;
 import org.neo4j.procedure.Name;
 import org.neo4j.procedure.Procedure;
+import org.neo4j.values.AnyValue;
 
 
 public class TruthGenerator {
@@ -27,7 +29,7 @@ public class TruthGenerator {
 
     @Procedure(name = "swarmintelligence.generateTruth")
     @Description("Generate Truth for every Node")
-    public Stream<String> generateTruth() {
+    public Stream<StringRecord> generateTruth() {
 
         try (var tx = db.beginTx()) {
             // leafs getten
@@ -35,15 +37,14 @@ public class TruthGenerator {
                     MATCH (a:Statement)
                     WHERE NOT (a)<-[:OPPOSES|SUPPORTS]-(:Connection)
                     WITH a
-                    MATCH (:User)-[r:VOTED]->(a)
-                    WITH a, collect(r.value) as votes
-                    WITH a, sum(votes)/count(votes) as truth_voted
+                    MATCH (:User)-[votes:VOTED]->(a)
+                    WITH a, sum(votes.value)/count(votes) as truth_voted
                     RETURN a.id as id, truth_voted as truth
                     """);
 
 
         }
-        return Stream.of("Worked");
+        return Stream.of(new StringRecord("Worked"));
 
 
         //success = await r.value()
@@ -125,3 +126,4 @@ public class TruthGenerator {
         }
     }
 }
+

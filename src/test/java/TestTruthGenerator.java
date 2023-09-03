@@ -23,7 +23,7 @@ public class TestTruthGenerator {
     @BeforeAll
     void initializeNeo4j() {
         this.embeddedDatabaseServer = Neo4jBuilders.newInProcessBuilder()
-                .withDisabledServer()
+                .withDisabledServer().withProcedure(TruthGenerator.class)
                 .build();
 
         this.driver = GraphDatabase.driver(embeddedDatabaseServer.boltURI());
