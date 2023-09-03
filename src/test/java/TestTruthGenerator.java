@@ -5,12 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
-import org.neo4j.driver.Record;
-import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
-import org.neo4j.driver.Value;
 import org.neo4j.harness.Neo4j;
 import org.neo4j.harness.Neo4jBuilders;
+import swarmintelligence.procedures.admin.TruthGenerator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,6 +25,19 @@ public class TestTruthGenerator {
                 .build();
 
         this.driver = GraphDatabase.driver(embeddedDatabaseServer.boltURI());
+
+        try (var session = driver.session()) {
+            var result = driver.session().run("""
+                    SHOW PROCEDURES
+                    """);
+            var records = result.list();
+            System.out.println("PROCEDURES::::   \n");
+            for (var record : records) {
+                System.out.println(record.asMap().toString());
+            }
+            System.out.println(" \n::::::::::::::::::::  ");
+
+        }
     }
 
     @AfterAll
@@ -50,7 +61,7 @@ public class TestTruthGenerator {
         try (var session = driver.session()) {
             var r = session.run("""
                     
-                    CALL swarmintelligence.generateTruth() YIELD out
+                    CALL swarmintelligence.procedures.dbmodification.generateTruth() YIELD out
                     return out
                                         
                     """);

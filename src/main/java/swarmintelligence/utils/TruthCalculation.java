@@ -1,13 +1,11 @@
-package swarmintelligence.functions;
+package swarmintelligence.utils;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.Long.sum;
-
 /**
- * # TODO user notifactions to improve all queries
+ * # TODO user notification to improve all queries
  * <p>
  * # TODO make it work: get_context
  * async def statement_get_context_tx(tx, *, statement_id, exclude_ids):  # generiere context
@@ -21,7 +19,7 @@ import static java.lang.Long.sum;
  * RETURN d as A
  * <p>
  * """, statement_id=statement_id)
- * print("HAHAHSXXSAD:::    ", *[dict(s for s in await r.fetch(100))])
+ * print("TEST US:::    ", *[dict(s for s in await r.fetch(100))])
  * summary: ResultSummary = await r.consume()
  * return summary.profile
  * <p>
@@ -68,11 +66,11 @@ import static java.lang.Long.sum;
  * # return math.e ** (-n_reports / self.report_damper).
  */
 
-class TruthCalculation {
+public class TruthCalculation {
     double report_damper = 5; // je höher der wert um so mehr Menschen müssen diese connection reporten damit das zugrunde
     // liegende Statement einfluss verliert
 
-    Map<String, Double> truth_cache = new HashMap<String, Double>();  // id:Wahrheitswert paare
+    Map<String, Double> truth_cache = new HashMap<>();  // id:Wahrheitswert paare
 
     public double R(Integer n) {
         return n > 0 ? 0.5 : 0;
@@ -80,9 +78,9 @@ class TruthCalculation {
 
     public double truth_of_node(List<Double> child_truths, List<Double> child_weights, Double node_truth_by_vote) {
         // = R*v(k) + (1-R)*summe[ i in C_k: w_c(i) * g_k(i) ]/ summe[ i in C_k, g_k(i)]
-        Double r = R(child_weights.size());
+        double r = R(child_weights.size());
         Double sum_of_weights = 0.0;
-        Double sum_weighted_child_truth = 0.0;
+        double sum_weighted_child_truth = 0.0;
 
         for (int i = 0; i < child_weights.size(); i++) {
 
@@ -91,19 +89,15 @@ class TruthCalculation {
 
         }
 
-        double out = r * node_truth_by_vote + (1 - r) * sum_weighted_child_truth / sum_of_weights;
-
-        return out;
+        return r * node_truth_by_vote + (1 - r) * sum_weighted_child_truth / sum_of_weights;
     }
 
     double truth_of_node_by_votes(List<Integer> votes) {
 
-        double out = (double)votes.stream().reduce(0, Integer::sum) / votes.size();
-        return out;
+        return (double) votes.stream().reduce(0, Integer::sum) / votes.size();
     }
 
     double weight_of_connection(List<Integer> votes) {
-        double out = (double)votes.stream().reduce(0, Integer::sum) / votes.size();
-        return out;
+        return (double) votes.stream().reduce(0, Integer::sum) / votes.size();
     }
 }
